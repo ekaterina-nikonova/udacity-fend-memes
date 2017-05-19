@@ -64,7 +64,6 @@
           ctx.fillText(topText, img.width / 2, img.width * 0.1, img.width * 0.9);
         } else {
           textArr = topText.split(' ');
-//          topText = '';
           string1 = '';
           string2 = '';
           while (string1.length + textArr[0].length < 35) {
@@ -94,12 +93,12 @@
           ctx.fillText(string2.trim(), img.width / 2, img.height * 0.95, img.width * 0.9);
         }
       }
-      img.src = 'http://www.firealarmhouston.com/images/blog/placeholder.png';
+      img.src = 'https://unsplash.it/500/400/?blur';
 
       $('#img-url').change(function() {
         // If the image fails to load or not found
         img.onerror = function() {
-          img.src = 'http://www.firealarmhouston.com/images/blog/placeholder.png';
+          img.src = 'https://unsplash.it/500/400/?blur';
           img.onload();
         }
         // If the image loads successfully
@@ -118,7 +117,6 @@
       });
 
       $('#top-text').on('keydown keyup', function (event) { // keypress() results in 1-character delay
-        console.log(event.key);
         topText = $('#top-text').val();
         img.onload();
       });
