@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli:300,400" rel="stylesheet">
+    <link rel="icon" href="img/me-gusta.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Meme Generator</title>
+  </head>
+  <body>
+    <header>
+      <h1 class="title">Simple Meme Generator</h1>
+    </header>
+    <main>
+      <div class="description">
+        <p class="intro">
+          The simplest meme generator you can find. Just pick a picture, add text and save your own meme!
+        </p>
+      </div>
+      <div class="meme">
+        <canvas id="memeCanvas" width="500" height="500"></canvas>
+      </div>
+      <div class="controls">
+        <h2>Add a picture</h2>
+        <input id="img-url" type="url" name="enter-url" placeholder="Paste URL and press Enter">
+        <h2>Add text</h2>
+        <input id="top-text" type="text" placeholder="Top text">
+        <input id="bottom-text" type="text" placeholder="Bottom text">
+        <!-- TODO: Check if the button works -->
+        <input id="save-button" type="button" download="my-meme" value="Save">
+      </div>
+    </main>
+    <script type="text/javascript">
+    // TODO: Eliminate redundancy, use functions
+      var c = document.querySelector('#memeCanvas');
+      var ctx = c.getContext("2d");
+
+      var img = new Image();
+      var topPlaceholder = 'Top text will appear here';
+      var bottomPlaceholder = 'Bottom text will be here.';
+      var topText = topPlaceholder;
+      var bottomText = bottomPlaceholder;
+      var textArr;
+      var string1;
+      var string2;
+      img.onload = function() {
+        // Canvas and image are of same size
+        c.width = img.width;
+        c.height = img.height;
+
+        ctx.drawImage(img, 0, 0);
+
+        ctx.fillStyle = 'white';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = img.width / 120;
+        // Formula for line height: img.width / 12 (= * 0.08) + img.width * 0.02 (space) = img.width * 0.1
+        ctx.font = img.width / 12 + 'px Impact';
+        ctx.textAlign = 'center';
+        // Because the font sized is defined via img.width, so is the line height.
+        if (topText.length < 35) {
+          ctx.strokeText(topText, img.width / 2, img.width * 0.1, img.width * 0.9);
+          ctx.fillText(topText, img.width / 2, img.width * 0.1, img.width * 0.9);
+        } else {
+          textArr = topText.split(' ');
+//          topText = '';
+          string1 = '';
+          string2 = '';
+          while (string1.length + textArr[0].length < 35) {
+            string1 += textArr.shift() + ' ';
+          }
+          string2 = textArr.join(' ');
+          ctx.strokeText(string1.trim(), img.width / 2, img.width * 0.1, img.width * 0.9);
+          ctx.fillText(string1.trim(), img.width / 2, img.width * 0.1, img.width * 0.9);
+          ctx.strokeText(string2.trim(), img.width / 2, img.width * 0.2, img.width * 0.9);
+          ctx.fillText(string2.trim(), img.width / 2, img.width * 0.2, img.width * 0.9);
+        }
+
+        if (bottomText.length < 35) {
+          ctx.strokeText(bottomText, img.width / 2, img.height * 0.95, img.width * 0.9);
+          ctx.fillText(bottomText, img.width / 2, img.height * 0.95, img.width * 0.9);
+        } else {
+          textArr = bottomText.split(' ');
+          string1 = '';
+          string2 = '';
+          while (string1.length + textArr[0].length < 35) {
+            string1 += textArr.shift() + ' ';
+          }
+          string2 = textArr.join(' ');
+          ctx.strokeText(string1.trim(), img.width / 2, img.height * 0.8, img.width * 0.9);
+          ctx.fillText(string1.trim(), img.width / 2, img.height * 0.8, img.width * 0.9);
+          ctx.strokeText(string2.trim(), img.width / 2, img.height * 0.95, img.width * 0.9);
+          ctx.fillText(string2.trim(), img.width / 2, img.height * 0.95, img.width * 0.9);
+        }
+      }
+      img.src = 'http://www.firealarmhouston.com/images/blog/placeholder.png';
+
+      $('#img-url').change(function() {
+        // If the image fails to load or not found
+        img.onerror = function() {
+          img.src = 'http://www.firealarmhouston.com/images/blog/placeholder.png';
+          img.onload();
+        }
+        // If the image loads successfully
+        img.src = $('#img-url').val();
+        img.onload();
+      });
+
+      // Registering keypress events, building lines of text. It's easier to repeat twice than use a function since strings are immutable.
+      $('#top-text').on('focusin focusout', function(event) {
+        if ($('#top-text').val() === '') {
+          topText = topPlaceholder;
+        } else {
+          topText = $('#top-text').val();
+        }
+        img.onload();
+      });
+
+      $('#top-text').on('keydown keyup', function (event) { // keypress() results in 1-character delay
+        console.log(event.key);
+        topText = $('#top-text').val();
+        img.onload();
+      });
+
+      $('#bottom-text').on('focusin focusout', function(event) {
+        if ($('#bottom-text').val() === '') {
+          bottomText = bottomPlaceholder;
+        } else {
+          bottomText = $('#bottom-text').val();
+        }
+        img.onload();
+      });
+
+      $('#bottom-text').on('keydown keyup', function (event) { // keypress() results in 1-character delay
+        console.log(event.key);
+        bottomText = $('#bottom-text').val();
+        img.onload();
+      });
+
+      $('#save-button').click(function() {
+        var imgURI = c.toDataURL();
+        window.open(imgURI);
+      });
+
+    </script>
+  </body>
+</html>
