@@ -4,7 +4,6 @@ html {
 
 * {
     box-sizing: border-box;
-    /*outline: 1px solid blue !important;*/
     font: 300 1rem "Muli", sans-serif;
 }
 
@@ -45,6 +44,12 @@ main {
   width: 100%;
 }
 
+.separator {
+  text-align: center;
+  color: #788;
+  font-size: 1.5rem;
+}
+
 .meme {
   width: 50%;
   order: 1;
@@ -57,6 +62,8 @@ main {
 
 canvas {
   display: flex;
+  width: 40vw;
+  height: auto;
   max-width: 100%;
   margin: 0 auto;
   padding: 0 5px;
@@ -71,7 +78,7 @@ canvas {
   margin: 10px 0;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 700px), screen and (orientation: portrait) {
   * {
     font-size: 2vmax;
   }
@@ -87,5 +94,10 @@ canvas {
 
   .controls {
     order: 1;
+  }
+
+  canvas {
+    width: 100vw;
+    height: auto;
   }
 }

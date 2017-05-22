@@ -16,20 +16,22 @@
     <main>
       <div class="description">
         <p class="intro">
-          The simplest meme generator you can find. Just pick a picture, add text and save your own meme!
+          The simplest meme generator you can find. Just pick an image file from your local drive or paste a URL of a picture. Then add text. When you're done, right-click your meme and save it on your computer.
         </p>
       </div>
       <div class="meme">
-        <canvas id="memeCanvas" width="500" height="500"></canvas>
+        <canvas id="memeCanvas"></canvas>
       </div>
       <div class="controls">
         <h2>Add a picture</h2>
+        <input id="img-file" type="file" name="load-file">
+        <p class="separator">OR</p>
         <input id="img-url" type="url" name="enter-url" placeholder="Paste URL and press Enter">
         <h2>Add text</h2>
         <input id="top-text" type="text" placeholder="Top text">
         <input id="bottom-text" type="text" placeholder="Bottom text">
-        <!-- TODO: Check if the button works -->
-        <input id="save-button" type="button" download="my-meme" value="Save">
+        <!-- TODO: Make the button work -->
+        <!-- <input id="save-button" type="button" download="my-meme" value="Save"> -->
       </div>
     </main>
     <script type="text/javascript">
@@ -38,6 +40,7 @@
       var ctx = c.getContext("2d");
 
       var img = new Image();
+      var imgPlaceholderURL = 'https://unsplash.it/500/400/?blur';
       var topPlaceholder = 'Top text will appear here';
       var bottomPlaceholder = 'Bottom text will be here.';
       var topText = topPlaceholder;
@@ -93,12 +96,24 @@
           ctx.fillText(string2.trim(), img.width / 2, img.height * 0.95, img.width * 0.9);
         }
       }
-      img.src = 'https://unsplash.it/500/400/?blur';
+      img.src = imgPlaceholderURL;
+
+      $('#img-file').change(function(event) {
+        img.onerror = function() {
+          img.src = imgPlaceholderURL;
+          img.onload();
+        }
+        // If the image loads successfully
+        var imgPath = URL.createObjectURL(event.target.files[0]);
+        img.src = imgPath;
+//        img.src = $('#img-file').val();
+        img.onload();
+      });
 
       $('#img-url').change(function() {
         // If the image fails to load or not found
         img.onerror = function() {
-          img.src = 'https://unsplash.it/500/400/?blur';
+          img.src = imgPlaceholderURL;
           img.onload();
         }
         // If the image loads successfully
@@ -131,15 +146,16 @@
       });
 
       $('#bottom-text').on('keydown keyup', function (event) { // keypress() results in 1-character delay
-        console.log(event.key);
         bottomText = $('#bottom-text').val();
         img.onload();
       });
 
-      $('#save-button').click(function() {
-        var imgURI = c.toDataURL();
-        window.open(imgURI);
-      });
+      // TODO: Find a way to make the button work with pictures loaded both from the local drive and from a URL
+
+      // $('#save-button').click(function() {
+      //   var imgURI = c.toDataURL();
+      //   window.open(imgURI);
+      // });
 
     </script>
   </body>
